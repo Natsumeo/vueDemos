@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Vue实现购物车</title>
+		<link rel="stylesheet" href="css/shoppingCart.css" />
+	</head>
+	<body>
+		<div class="store-item" v-for="(index1,item) in goodsObj">
+			<p>
+				<span v-html="itme.name"></span>
+				<label class="choose-all">
+		  		<input type="checkbox" name="all" v-on:click="chooseShopGoods(index1)" v-model="item.checked" />
+		  	    <span>全选</span>
+		  	    </label>
+			</p>
+			<table class="store-item">
+				<!--<col> 标签规定了 <colgroup> 元素内部的每一列的列属性。-->
+				<col width="10%"></col>
+				<col width="15%"></col>
+				<col width="15%"></col>
+				<col width="10%"></col>
+				<col width="40%"></col>
+				<col width="10%"></col>
+				<thead class="thead">
+					<tr>
+						<th>选择</th>
+						<th>商品</th>
+						<th>单价</th>
+						<th>运费</th>
+						<th>数量</th>
+						<th>操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr v-for="(index,data) in item.list">
+						<td>
+							<input type="checkbox" name="all" v-model="data.checked" v-on:click="choose(index1,index)" />
+						</td>
+						<td>
+							<p><span v-html="data.name"></span></p>
+						</td>
+						<td v-html="(data.price).toFixed(2)"></td>
+						<td v-html="(data.fare).toFixed(2)"></td>
+						<td>
+							<div class="quantity-selector clearfix">
+								<span class="reduce" v-on:click="numChange(index1,$index,-1)" v-bind:class="{'disable':data.num==1}">-</span>
+								<input type="number" v-bind:value="data.num" class="number" v-bind:data-realStock="data.realStock" v-on:keyUp="numEntry(index1,$index)" v-on:keyDown="numEntry(index1,$index)" v-model="data.num" />
+								<span class="add" v-on:click="numChange(index1,$index,1)" v-bind:class=" { 'disable':data.num==data.realStock} ">+</span>
+		  				    </div>
+		  			    </td>
+		  			    <td>   
+		  				<a href="javascript:;" rel="external nofollow" v-on:click="delGoods(index1,index)">删除</a>
+		  			    </td>
+		  		       </tr>
+		     	</tbody>
+		  </table>
+		  <div class="cal-store-box">
+		  <p>店铺总运费：<span v-html="calEveryFare(index1)"></span></p>
+		  <p>店铺商品总金额：<span v-html="calEveryStore(index1)"></span></p>
+		  </div>
+		 </div>
+		
+		<div class="store-footer">
+		<label>
+			<input type="checkbox" v-on:click="chooseAllGoods($event)" v-model="allChecked" />
+			<span>全选</span>
+		</label>
+		<div class="cal-box">
+		  <p>商品总运费:<span v-html="totalFare.toFixed(2)"></span></p>
+		  <p>商品总金额:<span v-html="totalMoney.toFixed(2)"></span></p>
+		</div>
+		</div>
+		<script src="http://cdn.bootcss.com/vue/1.0.7/vue.js"></script>
+		<script src="js/cart.js"></script>
+</body>
+</html>

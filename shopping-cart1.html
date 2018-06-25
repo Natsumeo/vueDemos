@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Hello MUI</title>
+<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+
+<link rel="stylesheet" href="../../css/mui.min.css">
+<link rel="stylesheet" href="../../css/app.css">
+<style>
+.mui-content>.mui-table-view:first-child{
+margin-top: 0.133333rem;
+}
+.mui-bar-nav~.mui-content{
+padding-top: 1.173333rem;
+}
+.mui-content{
+padding-bottom: 1.173333rem;
+}
+input[type=checkbox] {
+   width: 0.426666rem;
+   height: 0.426666rem;
+   border: 0;
+   outline: 0!important;
+   background-color: transparent;
+   -webkit-appearance: none;
+}
+input[type=checkbox]:before {
+   content: '\e411';
+}
+input[type=checkbox]:checked:before {
+   content: '\e441';
+}
+input[type=checkbox]:before {
+   font-family: Muiicons;
+   font-size: 0.426666rem;
+   font-weight: 400;
+   line-height: 1;
+   text-decoration: none;
+   color: #81d8d0;
+   border-radius: 0;
+   background: 0 0;
+   -webkit-font-smoothing: antialiased;
+}
+input[type=checkbox]:checked:before {
+    color: #81d8d0;
+}
+
+.allinput[type=checkbox] {
+   width: 0.426666rem;
+   height: 0.426666rem;
+   border: 0;
+   outline: 0!important;
+   background-color: transparent;
+   -webkit-appearance: none;
+}
+.allinput[type=checkbox]:before {
+   content: '\e411';
+}
+.allinput[type=checkbox]:checked:before {
+   content: '\e441';
+}
+.allinput[type=checkbox]:before {
+   font-family: Muiicons;
+   font-size: 0.426666rem;
+   font-weight: 400;
+   line-height: 1;
+   text-decoration: none;
+   color: #fff;
+   border-radius: 0;
+   background: 0 0;
+   -webkit-font-smoothing: antialiased;
+}
+.allinput[type=checkbox]:checked:before {
+    color: #fff;
+}
+.popover_detail_numbtn .mui-numbox{
+float: right;
+border-radius: 0;
+padding: 0 0.56rem;
+height: 0.586666rem;
+width:2rem;
+}
+.mui-numbox [class*=btn-numbox], .mui-numbox [class*=numbox-btn] {
+   font-size: 0.4rem;
+   line-height: 0.56rem;
+   width: 0.56rem;
+   height: 0.56rem;
+   color: #707070;
+   background-color: #fff;
+}
+.shop_input_num[type=number]{
+font-size: 0.266666rem;
+line-height: 0.56rem;
+top: 0;
+}
+</style>
+</head>
+
+
+<body id="app" v-cloak>
+<header class="mui-bar mui-bar-nav">
+<a class="mui-action-back mui-pull-left mui_return_back"></a>
+<h1 class="mui-title">购物车</h1>
+</header>
+
+<div class="mui-content">
+<div class="mui_shopcar_list_box" v-for="data in items">
+<div class="mui_order_item_title">
+<div class="mui_adress_radio">
+<input type="checkbox" v-model="data.shopselected" v-on:click="checkShop($index)">
+</div>
+    <a href="javascript:;" class="look_shop" v-on:click="LookShop(data.id)">
+    {{data.shopname}}  <img class="order_link" src="../../images/icon/order_link.png"/>
+    </a>
+    </div>
+<ul class="mui-table-view mui-table-view-chevron mui_shopcar_list">
+<li class="mui_shopcar_item" v-for="item in data.listgoods">
+<div class="mui_adress_radio">
+<input type="checkbox" v-model="item.selected" v-on:click="checkGoods($parent.$index,$index)">
+</div>
+<div class="mui_shopcar_img" v-on:click="LookGoods(item.id)">
+<img src="../../images/423.jpg"/>
+</div>
+<div class="mui_shopcar_media">
+<div class="mui_shopcar_title">
+<p class="mui_shopcar_name">{{ item.name }}</p>
+<span class="mui_shopcar_del" v-on:click="remove($parent.$index,$index)">
+<a><img src="../../images/icon/19.png" alt="" /></a>
+</span>
+</div>
+<p class="mui_shopcar_unit">单位：升</p>
+<div class="mui_shopcar_pro">
+<p class="mui_shopcar_price">{{item.price|currency '￥' 2}}</p>
+<div class="popover_detail_numbtn">
+<div class="mui-numbox" data-numbox-min='1' data-numbox-max='9'>
+<button class="mui-btn mui-btn-numbox-minus" type="button" v-on:click.native="reduce($parent.$index,$index)">-</button>
+<input class="mui-input-numbox shop_input_num" type="number" disabled value="{{item.count}}"/>
+<button class="mui-btn mui-btn-numbox-plus" type="button" v-on:click.native="add($parent.$index,$index)">+</button>
+</div>
+</div>
+</div>
+</div>
+</li>
+<!--<li class="mui_shopcar_item">
+<div class="mui_adress_radio">
+<input name="address" type="checkbox">
+</div>
+<div class="mui_shopcar_img">
+<img src="../../images/423.jpg"/>
+</div>
+<div class="mui_shopcar_media">
+<div class="mui_shopcar_title">
+<p class="mui_shopcar_name">内蒙古原产牛奶</p>
+<span class="mui_shopcar_del">
+<img src="../../images/icon/19.png" alt="" />
+</span>
+</div>
+<p class="mui_shopcar_unit">单位：升</p>
+<div class="mui_shopcar_pro">
+<p class="mui_shopcar_price">￥ 50.00</p>
+<div class="popover_detail_numbtn">
+<div class="mui-numbox" data-numbox-min='1' data-numbox-max='9'>
+<button class="mui-btn mui-btn-numbox-minus" type="button">-</button>
+<input id="test" class="mui-input-numbox" type="number" value="5" />
+<button class="mui-btn mui-btn-numbox-plus" type="button">+</button>
+</div>
+</div>
+</div>
+</div>
+</li>-->
+</ul>
+</div>
+
+</div>
+
+<div class="mui_shopcar_bar">
+<div class="mui_adress_radio">
+<input type="checkbox" class="allinput" v-model="selectAll">
+全选
+</div>
+<div class="mui_shopcar_sumbtn">
+<p class="mui_shopcar_sum">合计：{{ total|currency '￥' 2}}</p>
+<button id="order_true" type="button" v-on:click.native="Submit()">结算</button>
+</div>
+</div>
+<script type="text/javascript" src="../../js/app.js" ></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/jquery-1.8.3.min.js" ></script>
+<script>
+
+mui.init();//初始化
+mui.plusReady(function(){})
+var vm = new Vue({
+       el: "#app",
+       data: {
+         OrderTotal:0,//用来保存商品总价
+           items: [//加入购物车商品
+               {
+                   id:1,
+                   shopname:'内蒙古原产牛奶',
+                   shopselected:false,
+                   listgoods:[
+                       {
+                          id:101,
+                           name: '奶片',
+                           price:1.3,
+                           count:2,
+                           selected:false
+                       },
+                       {
+                          id:102,
+                           name: '小辣椒',
+                           price:100,
+                           count:1,
+                           selected:false 
+                       },
+                       {
+                          id:103,
+                           name: '小辣椒22222',
+                           price:100,
+                           count:1,
+                           selected:false 
+                       }
+                   ]
+               },
+               {
+                   id:2,
+                   shopname:'云端电子',
+                   shopselected:false,
+                   listgoods:[
+                       {
+                           id:201,
+                           name: '三星',
+                           price:4000,
+                           count:2,
+                           selected:false 
+                       },
+                       {
+                           id:202,
+                           name: '华为1',
+                           price:100,
+                           count:1,
+                           selected:false 
+                       },
+                       {
+                           id:203,
+                           name: '华为2',
+                           price:100,
+                           count:1,
+                           selected:false 
+                       },
+                       {
+                           id:204,
+                           name: '华为3',
+                           price:100,
+                           count:1,
+                           selected:false 
+                       }
+                   ]
+               },
+               {
+                   id:3,
+                   shopname:'小米官方商店',
+                   shopselected:false,
+                   listgoods:[
+                       {
+                           id:301,
+                           name: '小米4',
+                           price:1.3,
+                           count:2,
+                           selected:false 
+                       }
+                   ]
+               }
+           ]
+       },
+       //computed相当于属性的一个实时计算，如果实时计算里关联了对象，那么当对象的某个值改变的时候，同事会出发实时计算。
+       computed: {
+           selectAll:{
+               //动态判断全选按钮是否选中（根据 选中的商店数量==items数组长度）
+             get:function(){
+                   return this.items.filter(function(item){
+                       return item.shopselected == true;
+                   }).length == this.items.length;
+               },
+               //设置全选
+               set:function(val){
+                   this.items.forEach(function(item){//遍历所有商店
+                       item.shopselected = val;//所有商店选中
+                       item.listgoods.forEach(function(list){//遍历所有商品
+                           list.selected = val;//所有商品选中
+                       })
+                   });
+               }
+           },
+           num:function(){
+               var num = 0;
+               this.items.forEach(function(item){//遍历商家数组
+                   item.listgoods.filter(function(a){//遍历商品数组
+                       return a.selected//选择选中的商品
+                   }).map(function(a){
+                       return a.count//计算商品数量*商品单价
+                   }).forEach(function(a){
+                       num += a;
+                   });
+               })
+               return num;//返回总价
+           },
+           //计算总价
+           total:function(){
+             var total = 0;
+               this.items.forEach(function(item){//遍历商家数组
+                   item.listgoods.filter(function(a){//遍历商品数组
+                       return a.selected//选择选中的商品
+                   }).map(function(a){
+                       return a.count*a.price//计算商品数量*商品单价
+                   }).forEach(function(a){
+                       total += a;
+                   });
+               })
+               this.OrderTotal = total;//更新商品总价
+               return total;//返回总价
+           }
+       },
+       methods:{
+           //点击商店选中所有商品
+           checkShop:function(pID){
+               var self = this.items[pID];
+               if(self.shopselected != true){
+                   self.listgoods.forEach(function(list){
+                       list.selected = true;
+                   })
+               }else{
+                   self.listgoods.forEach(function(list){
+                       list.selected = false;
+                   })
+               }  
+           },
+           //选择某商品 判断商店是否全选
+           checkGoods:function(pID,id){
+               var self = this.items[pID];//点击单选框的父节点
+               if(self.listgoods[id].selected){//判断当选框是否备选中
+               
+self.listgoods.filter(function(item){
+                   return item.selected == true;
+               }).length-1 == self.listgoods.length ? self.shopselected = true : self.shopselected = false;
+               }else{
+               
+self.listgoods.filter(function(item){
+                   return item.selected == true;
+               }).length+1 == self.listgoods.length ? self.shopselected = true : self.shopselected = false;
+               }
+           },
+           //增加商品数量 最多购买100件
+           add:function (parentID,ID) {//parentID是商家id,ID是商品id
+               var self = this.items[parentID].listgoods[ID];
+               if(self.count >100){
+                   return false;
+               }
+               self.count++;
+           },
+           //减少商品数量 最少买一件
+           reduce:function(parentID,ID){//parentID是商家id,ID是商品id
+               var self = this.items[parentID].listgoods[ID];
+               if(self.count <= 1){
+                   return false
+               }
+               self.count--;
+           },
+           //移除商品函数
+           remove:function(parentID,ID){//parentID是商家id,ID是商品id
+               var self = this.items[parentID];
+               self.listgoods.length == 1 ? this.items.splice(parentID, 1) : self.listgoods.splice(ID, 1);//如果删除最后一个商品，则商家一并删除
+           },
+           
+           //结算函数
+           Submit:function(){
+             //获取选中的商家及相应的商品
+             var TotalPrice = this.OrderTotal;//存放要支付的总价
+             var OrderArry = [];//存放选中的商品数组
+               this.items.forEach(function(item){//遍历商家数组
+if(item.shopselected){//如果商家备选中则其下商品均被选中，直接添加数组
+return OrderArry.push(item)
+}else{//如果商家没有选中，继续遍历旗下商品是否备选中
+
+var arry = {//设置临时数组，来保存没有选中商店的数据
+'id' : item.id,//商店id
+                   'shopname' : item.shopname,//商店名字
+                   'shopselected' : item.shopselected,//商店是否备选中
+                   'listgoods' : []//商店旗下的商品数组
+};
+item.listgoods.filter(function(list){//遍历商店旗下的商品数组
+                       return list.selected//过滤所有选中的商品
+                   }).map(function(a){
+                   
+return arry.listgoods.push(a)//将选中的商品添加到数组中
+                   });
+                   if(arry.listgoods.length > 0){//如果有商品选中在添加到数组
+                   
+OrderArry.push(arry)
+                   }
+}
+               });
+               console.log(OrderArry)//打印选中的商品数组
+               console.log(TotalPrice)//打印总价
+              
+//结算跳转页面
+  //打开确认订单
+  mui.openWindow({
+   url: 'order_true.html', 
+   id:'order_true.html',
+   extras:{//自定义扩展参数，可以用来处理页面间传值
+    'BuyMethod' : 'ShoppingCartSettlement',//结算方式
+      'ItemList'  : OrderArry,//选择的商品数组
+      'TotalPrice' : TotalPrice//要支付的总价
+   },
+   waiting:{
+      autoShow:true,//自动显示等待框，默认为true
+      title:'正在加载...'//等待对话框上显示的提示内容
+   }
+  });
+           },
+           
+           //查看商家
+         LookShop:function(id){
+         mui.openWindow({
+   url: '../SellerHome/seller_index.html', 
+   id:'../SellerHome/seller_index.html',
+   extras:{
+     //自定义扩展参数，可以用来处理页面间传值
+   },
+   waiting:{
+      autoShow:true,//自动显示等待框，默认为true
+      //title:'正在加载...'//等待对话框上显示的提示内容
+   }
+  });
+         },
+         //查看商品
+         LookGoods:function(id){
+         mui.openWindow({
+   url: '../Selected/selected_list_details.html', 
+   id:'../Selected/selected_list_details.html',
+   extras:{
+     //自定义扩展参数，可以用来处理页面间传值
+   },
+   waiting:{
+      autoShow:false,//自动显示等待框，默认为true
+      //title:'正在加载...'//等待对话框上显示的提示内容
+   }
+  });
+         },
+       }
+       });
+</script>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</html>
